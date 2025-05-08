@@ -44,9 +44,11 @@ async def get_notes():
 
 @app.post("/notes")
 async def create_note(note: NoteCreate):
-    if len(note.title) < 0 or len(note.content) < 0:
-        return {"message": "Title and content can't be empty!"}
+    title_stripped = note.title.strip()
+    content_stripped = note.content.strip()
 
+    if len(title_stripped) <= 0 or len(content_stripped) <= 0:
+        return {"message": "Title and content cannot be empty!"}
 
     with Session(engine) as session:
         db_nota = Note.model_validate(note)
