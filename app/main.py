@@ -1,6 +1,6 @@
-from fastapi import FastAPI, Request
-from sqlmodel import create_engine, Session, select
-from models import Note, NoteCreate
+from fastapi import FastAPI
+from sqlmodel import SQLModel, create_engine, Session, select
+from .models import Note, NoteCreate
 import json
 import os
 
@@ -16,6 +16,14 @@ engine = create_engine(
 )
 
 app = FastAPI()
+
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
+
+
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
 
 
 @app.get("/")
@@ -36,6 +44,10 @@ async def get_notes():
 
 @app.post("/notes")
 async def create_note(note: NoteCreate):
+    if len(note.title) < 0 or len(note.content):
+        return {"message": "Title and content can't be empty!"}
+
+
     with Session(engine) as session:
         db_nota = Note.model_validate(note)
         session.add(db_nota)
