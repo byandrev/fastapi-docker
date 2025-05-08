@@ -27,6 +27,8 @@ services:
     networks:
       - redlocal
 
+volumes:
+  pgdata:
+  
 networks:
   redlocal:
-
