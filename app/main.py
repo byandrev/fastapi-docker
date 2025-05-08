@@ -44,7 +44,7 @@ async def get_notes():
 
 @app.post("/notes")
 async def create_note(note: NoteCreate):
-    if len(note.title) < 0 or len(note.content):
+    if len(note.title) < 0 or len(note.content) < 0:
         return {"message": "Title and content can't be empty!"}
 
 
