@@ -7,7 +7,23 @@ services:
       - ./:/app  
     environment:
       - HOLA=MUNDO
+      - DB_HOST=db
+      - DB_USER=byandrev
+      - DB_PASS=byandrev123
+      - DB_NAME=notes
+      - DB_PORT=5432
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - redlocal
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: byandrev
+      POSTGRES_PASSWORD: byandrev123
+      POSTGRES_DB: notes
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
       - redlocal
 
